@@ -1,26 +1,22 @@
-<h1>Register page</h1>
-<div class="container mt-5">
-    <h2 class="mb-4">Register</h2>
-    <form class="form" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+<app-nav-bar></app-nav-bar>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="firstName">UserName</label>
-      <input class="form-control" type="text" id="firstName" formControlName="firstName" required [class.is-invalid]="registrationForm.get('firstName')?.invalid && registrationForm.get('firstName')?.touched">
-      <small [class.d-none]="registrationForm.get('firstName')?.valid || registrationForm.get('firstName')?.untouched" class="text-danger">Please enter a valid Firstname</small>
+      <label for="userName">Username</label>
+      <input class="form-control" type="text" id="userName" formControlName="userName" required [class.is-invalid]="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched">
+      <small [class.d-none]="registerForm.get('userName')?.valid || registerForm.get('userName')?.untouched" class="text-danger">Please enter a valid Firstname</small>
     </div>
-
-         
     <div class="form-group">
         <label for="password">Password</label>
-        <input class="form-control" type="password" id="password" formControlName="password" required [class.is-invalid]="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched">
-        <small *ngIf="registrationForm.get('password')?.hasError('minlength') && registrationForm.get('password')?.touched" class="text-danger">Password should contain at least 6 characters</small>
-        <small *ngIf="registrationForm.get('password')?.hasError('required') && registrationForm.get('password')?.touched" class="text-danger">please enter valid password</small>
+        <input class="form-control" type="password" id="password" formControlName="password" required [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+        <small *ngIf="registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched" class="text-danger">Password should contain at least 6 characters</small>
+        <small *ngIf="registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched" class="text-danger">please enter valid password</small>
        </div>
        
        <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
-        <input [class.is-invalid]="registrationForm.errors?.['passwordMismatch'] && registrationForm.get('confirmPassword')?.touched" formControlName="confirmPassword" type="password" class="form-control">
-        <small *ngIf="registrationForm.errors?.['passwordMismatch'] && registrationForm.get('confirmPassword')?.touched" class="text-danger">Passwords do not match</small>
+        <input [class.is-invalid]="registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched" formControlName="confirmPassword" type="password" class="form-control">
+        <small *ngIf="registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched" class="text-danger">Passwords do not match</small>
        </div>
-    <button class="btn btn-primary" type="submit" >Submit</button>
-    </form>
-   </div>
+       <button class="btn btn-primary" type="submit" >Submit</button>
+       <button type="button" class="btn btn-secondary" (click)="goToLogin()">Login</button>
+</form>

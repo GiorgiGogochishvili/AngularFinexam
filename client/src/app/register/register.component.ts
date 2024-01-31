@@ -12,55 +12,56 @@ import { passwordMatchValidator } from './passwordMatch.validator';
 })
 export class RegisterComponent implements OnInit {
 
- registrationForm!: FormGroup;
 
- isSubmitted = false;
-
- constructor(private fb: FormBuilder, private authService: AuthService, private router: Router,) {}
-
- ngOnInit() :void {
-    this.createForm();
-
- }
-
- createForm() : void{
-     this.registrationForm = this.fb.group({
-       userName:['', [Validators.required]],
-       password:['', [Validators.required, Validators.minLength(6)]],
-       confirmPassword: ['', [Validators.required]],
-       jobId: [null, Validators.required]
-     }, {validators: passwordMatchValidator});
- }
-
- get userName(){
-    return this.registrationForm.get('userName');
- }
+  constructor(private fb: FormBuilder, private authService : AuthService, private router: Router) {}
 
 
+  registerForm!: FormGroup;
+  newIsSaved!:boolean;
 
- onSubmit() : void{
+  register : any = {
+    userName: '',
+    password: '',
+    confirmPassword:''}
 
-    if (this.registrationForm.valid) {
-      const { confirmPassword, jobId, ...userData } = this.registrationForm.value;
-      this.isSubmitted = true;
+  createForm(){
+    this.registerForm = this.fb.group({
+      userName:['', [Validators.required]],
+      password:['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]]
+    } ,{validators:  passwordMatchValidator}); }
 
-      this.authService.registerUser({ ...userData}).subscribe({
-        next: (response) => {
-          console.log("Registration successful: ",response);
-          this.router.navigate(['/login']);
-        },
-        error: (error) => {
-          console.log('Registration failed: ', error);
-        }
-      });
+    onSubmit(): void {
+      if (this.registerForm.valid) {
+        const { userName, password } = this.registerForm.value;
+    
+        this.authService.registerUser({ username: userName, password:password }).subscribe({
+          next: (response) => {
+            console.log("Registration successful:", response);
+            this.newIsSaved = true;
+            this.router.navigate(['/login']);
+          },
+          error: (error) => {
+            console.error('Registration failed:', error.error); 
+          }
+        });
+      }
     }
- }
 
- canExit(){
-  if(this.registrationForm.dirty && this.isSubmitted==false){
-    return window.confirm("Information on the register page can be lost unless saved before leaving")
+
+ngOnInit() : void {
+  this.createForm();
+  this.newIsSaved = false;
+}
+
+canExit(){
+  if(!this.newIsSaved){
+    return window.confirm('You have unsaved changes. Do you really want to discard this change?');
+    
+  }else{
+    return true;
   }
- }
+}
 
  goToLogin(){
     this.router.navigate(['/login'])
